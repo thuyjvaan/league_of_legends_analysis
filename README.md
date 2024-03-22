@@ -62,10 +62,84 @@ Descriptive statistics for the 'kills' column:
 * min    : 0
 * std    : 2.4190900419068813
 
+This graph shows that the distribution of  `kills` is rightly-skewed, which means it has a ‘tail’ to the right, indicating that large extreme values are more likely than large values. This is consistent with our expectation because it's easier to get a few kills in a game, rather than a lot. Only the top players who are highly skilled can get a higher kills rate. This observation on `kills` could be useful for our future analysis when we look into what factors could predict a team's performance.
 
+### Bivariate Analysis
+Our research question is concerned with the stats of the top player that affect the chances of the team winning overall. So, we can now investigate the relationship between the team winning or not and the top player’s xp level.
 
+Below is our bar chart comparing the difference of means for player’s gold earned between winning teams and losing teams as well as some relevant stats:
+<iframe
+  src="assets/bi_earngold"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+Statistics for 'earnedgold' feature:
+Absolute difference     : 2019.6618085416794
+Proportional difference : 0.12071365886583755
+
+As we expected, the winning team has a higher amount of gold earned on average. However, we thought the proportional difference would have been more significant than 12%. This information will become very valuable later as it supports our prediction at the beginning that the amount of difference in gold earned between the winning and losing teams have a significant impact on the team's outcome.
+
+### Interesting Aggregates
+(Will fill in later)
 
 ## Assessment of Missingness
+### NMAR Argument
+For data classified as NMAR (Not Missing at Random), the absence of data is inherently related to its own characteristics. If certain data is missing, it's likely due to intrinsic reasons tied to its value.
+
+In our analysis of the dataset, we found several columns with frequent missing values, such as 'dragons', 'opp_dragons', and their respective types ('infernals', 'mountains', 'clouds', 'oceans', and 'chemtechs'). We suspect these columns follow the NMAR pattern. When these entries are NaN, it implies the absence of dragons or a specific type of dragon in that game, indicating potential non-input rather than a zero value. Additionally, another factor potentially influencing missingness could be the total number of dragons in the game, which also contains numerous NaN values. Intuitively, as the dragon count increases in a game, the probability of encountering a wider variety of dragons also rises.
+
+### Missingness Dependency
+In investigating missing data, our aim was to understand why certain entries were labeled complete while others were marked as partial. Upon examination, we observed a notable trend of partial data particularly within the entries from the 'LPL' league, representing China. This trend was especially evident in columns situated towards the end of the DataFrame, which were crucial for our analysis. We sought to determine if this pattern extended beyond mere coincidence, as our initial observations suggested a prevalence of incomplete data originating from Chinese leagues like 'LPL' and 'LDL'.
+
+Consequently, we conducted an analysis on our primary DataFrame, df, to identify columns consistently experiencing missing data. Notably, we discovered that 'opp_csat15', one of our key columns, exhibited frequent absence alongside other columns located towards the end of the DataFrame.
+
+To further investigate, we selected variables we believed might exhibit a correlation with the presence or absence of 'opp_csat15' data. Initially, we determined our test parameters using our standard dataset. Specifically, we isolated rows where 'golddiffat15' was NaN and extracted the columns ['league', 'split', 'playoffs', 'patch', and 'position'].
+
+By using the groupby() method, we were able to test out our columns and see the missingness of certain leagues. Jumping to our test statistic, we noticed that the Missingness Distribution of ‘league’ compared to the others that we tested seemed a lot more lopsided.
+
+<iframe
+  src="assets/missing.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+Upon examining the graph, it appears that there is a significant level of missing data within leagues such as 'LPL' and 'LDL', consistent with our earlier observations during dataset analysis. Notably, the 'LDL' exhibits a Missingness Proportion of 0.517867, indicating that for all instances of missing values in 'opp_csat15', the 'LDL' league accounts for over 50% of those occurrences.
+
+While this observation might be attributed to the 'LDL' league comprising over 50% of all competitive games, we aim to thoroughly assess the dataset by conducting permutations on the columns under scrutiny. This entails shuffling the 'league', 'split', 'playoffs', 'patch', and 'position' columns.
+
+Subsequently, after regrouping by 'league', we randomized the leagues once more and reevaluated the occurrence of null values to ascertain if any league could surpass a 50% rate of missingness, replacing any 'opp_csat15' values with 'golddiffat15'.
+<iframe
+  src="assets/pmissing.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+As you can see, even our league with the largest share of missing values when permutated cannot even hit 0.1 of the total missingness on column golddiffat15. This implies that the missingness of this column is likely Missing at Random, dependent on the league column. To test this, let’s use a pair of hypotheses and a significance level of 0.01 with 1000 trial runs.
+
+**Null Hypothesis**: Data that is missing comes from the same league distribution as all other data.
+**Alternative Hypothesis**: Data that is missing is significantly more likely to be one league than others.
+
+We simulated this test 1000 times and returned a p-value of 0.0.
+
+Here, our p-value suggests that we can reject our null hypothesis, meaning that it is likely that data missing from golddiffat15 is significantly more likely to be in at least one league than others - this in turn means that golddiffat15 has data that is Missing At Random.
+
+Now, let’s find a column that golddiffat15 does not depend on. Intuitively, golddiffat15 shouldn’t depend on columns that are aggregated throughout our data extremely evenly; that is, columns that have no relation and are evenly spread out should not have any correlation with golddiffat15. One of these columns is position, which will always be even regardless of the matches, since all games will have 2 of each position.
+
+Here, let’s test what the position missingness of golddiffat15 looks like when we groupby() on the position column.
+<iframe
+  src="assets/position.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+As you can see, this happened very often, because at the end of the day, the missingness of ‘golddiffat15’ never relied on ‘position’.
+
+
 
 ## Hypothesis Testing
 
