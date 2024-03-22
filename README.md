@@ -222,11 +222,29 @@ Damage output, minion kills (CS), and Vision Score are indicators of team perfor
 
 ### Hyperparameters
 **Model Description** 
-In the end, we opted to develop a model based on either the DecisionTreeClassifier or LogisticRegression. Initially, we manually tested various LogisticRegression and DecisionTreeClassifier models. The most accurate LogisticRegression model achieved around 91.5% accuracy, while the best DecisionTreeClassifier model reached approximately 90.5% accuracy. Based on this evaluation, we selected LogisticRegression as our final model. Employing GridSearchCV with cross-validation, we determined the optimal max_iter and penalty parameters to be 300 and 'l2' respectively. Upon training the model with the entire dataset, we achieved a final accuracy of approximately 91.5%. Overall, we were content with this level of accuracy, especially after incorporating what we considered to be effective features into our model. The optimization of hyperparameters and features enabled us to develop a model capable of predicting match outcomes with a high degree of accuracy.
+In the end, we opted to develop a model based on either the DecisionTreeClassifier or LogisticRegression. Initially, we manually tested various LogisticRegression and DecisionTreeClassifier models. The most accurate LogisticRegression model achieved around 91.5% accuracy, while the best DecisionTreeClassifier model reached approximately 90.5% accuracy. Based on this evaluation, we selected `LogisticRegression` as our final model. Employing GridSearchCV with cross-validation, we determined the optimal max_iter and penalty parameters to be 300 and 'l2' respectively. Upon training the model with the entire dataset, we achieved a final accuracy of approximately 91.5%. Overall, we were content with this level of accuracy, especially after incorporating what we considered to be effective features into our model. The optimization of hyperparameters and features enabled us to develop a model capable of predicting match outcomes with a high degree of accuracy.
 
 **Quantitative Variables**: Our discrete variables included `kills`, `deaths`, `assists`, `dragons`, `barons`, `heralds`, `firstblood`, `doublekills`, `triplekills`, `dpm`, `cspm`, `vspm`, `earned gpm`, `turretplates`, `towers`, and `inhibitors`. To account for fluctuations and differences in these variables, particularly in explaining player/team performance relative to others, we standardized `dpm`, `cspm`, `vspm`, `golddiffat15`, and `xpdiffat15`.
 
-**Qualitative Variables**: For our qualitative variables, namely position and teamname, we utilized the OneHotEncoder to convert them into quantitative columns, given their ordinal data types.
-
+**Qualitative Variables**: For our qualitative variables, namely position and teamname, we utilized the `OneHotEncoder` to convert them into quantitative columns, given their ordinal data types.
 
 ## Fairness Analysis
+**Question**: Does the prediction outcome vary between games with a significant number of kills compared to those with fewer kills?
+
+**Evaluation metric:** The most suitable measure for this predictive task is accuracy. This is because in a win-loss scenario, both false positives and false negatives hold no significance.
+
+**Null Hypothesis:** The classifier's accuracy remains consistent between games with a high number of kills and those with a low number of kills, any disparities are attributable to chance.
+
+**Alternative Hypothesis:** The classifier's accuracy is greater for games with fewer kills.
+
+**Test statistic:** The disparity in accuracy (fewer kills versus high number of kills).
+
+**Significance Level:** 0.05
+
+**Operationalized groups**
+The mean number of kills per game is around 29. Thus, we define high number of kills as greater than 29 and low number of kills as smaller or equals to 29.
+
+To split the data into high number of kills vs low number of kills, we need to group by individual games. Thus, we clean the original data again, this time retaining the `gameid` column\
+Using the same code from the Framing the Problem section, adding 'gameid' to the list of desired columns
+
+**Conclusion:** According to the null hypothesis, it's uncommon to observe probability differences as significant as the observed statistic (0.0 < 0.05). Therefore, we can reject the null hypothesis and have enough evidence to support the alternative hypothesis, indicating that our model performs notably better for games with fewer total kills than those with higher total kills.
