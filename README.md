@@ -239,7 +239,7 @@ In the end, we opted to develop a model based on either the DecisionTreeClassifi
 **Qualitative Variables**: For our qualitative variables, namely position and teamname, we utilized the `OneHotEncoder` to convert them into quantitative columns, given their ordinal data types.
 
 ## Fairness Analysis
-**Question**: Does the prediction outcome vary between games with a significant number of kills compared to those with fewer kills?
+Question: Does the prediction outcome vary between games with a significant number of kills compared to those with fewer kills?
 
 **Evaluation metric:** The most suitable measure for this predictive task is accuracy. This is because in a win-loss scenario, both false positives and false negatives hold no significance.
 
@@ -247,15 +247,12 @@ In the end, we opted to develop a model based on either the DecisionTreeClassifi
 
 **Alternative Hypothesis:** The classifier's accuracy is greater for games with fewer kills.
 
-**Test statistic:** The disparity in accuracy (fewer kills versus high number of kills).
+**Test statistic:** The difference in accuracy (fewer kills versus high number of kills).
 
 **Significance Level:** 0.05
 
-**Operationalized groups**
-The mean number of kills per game is around 29. Thus, we define high number of kills as greater than 29 and low number of kills as smaller or equals to 29.
-
 To split the data into high number of kills vs low number of kills, we need to group by individual games. Thus, we clean the original data again, this time retaining the `gameid` column\
-Using the same code from the Framing the Problem section, adding 'gameid' to the list of desired columns
+Using the same code from the Framing the Problem section, adding 'gameid' to the list of desired columns columns
 
 <iframe src="assets/fairness_analysis.html" width=800 height=600 frameBorder=0></iframe>
 
