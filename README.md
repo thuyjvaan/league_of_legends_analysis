@@ -1,38 +1,33 @@
 # league_of_legends_analysis
 
 ## Introduction
-In this analysis, we wanted to analyze the best of the best: Competitive Games, and we decided to use the most recent completed season, the 2022 season, to show this. In our analysis, we will analyze one specific question that we believe is very important to how winning games, the primary objective of League, is decided:
+In 2024, League of Legends continues to be a prominent esports title. There's a growing consensus among players that, in competitive matches, the top lane role holds less significance compared to roles like mid, bot, jungle, and support. This perception stems from the top lane being typically isolated and receiving less attention. Strong performance during the laning phase is often undervalued if the player excels in team fights. While top laners can indeed influence game outcomes, it happens less frequently than in other roles. This player viewpoint prompted us to explore:
 
-**Does a winning top lane affect the probability of a team winning the game?**
+**Does the performance of the top lane player during the laning phase impact the team's chances of winning?**
 
-Top lane, one of the five positions in League of Legends, is typically observed as a solo lane, meaning they often don’t receive too much help from other players on their team and especially the jungle, which typically (at least recently) prioritizes objectives like Dragons, Heralds, and Barons instead of helping near top.
+The top lane in League of Legends is often seen as a solitary lane, where players typically receive minimal assistance from teammates, particularly from the jungle role, which tends to prioritize objectives like Dragons, Heralds, and Barons over helping near the top lane.
 
-Therefore, we wanted to ask this question, because it is especially relevant—we observed (with our eyes) that top lanes often didn’t really help a team unless they were doing exceptionally well and could carry the team, meaning they observed a very large gold lead. Therefore, we wanted to see how often they actually made teams better, and if they did, was it significant to winning in pro-play. In doing so, we looked through 149400 rows (or 12450 games) worth of data. In filtering our data, we realized that of the 123 columns that were provided, we only needed these 7 columns to help us answer our question: ['gameid', 'datacompleteness','side', 'position', 'result', 'xpat15', 'xpdiffat15'].
+This observation led us to explore the impact of top lane performance on team success, as we noticed that top laners often didn't significantly contribute to their team unless they were performing exceptionally well and had a substantial gold advantage. To investigate this, we analyzed a dataset consisting of 149,400 rows (or 12,450 games). Upon filtering the data, we identified 7 key columns necessary for our analysis: 'gameid', 'datacompleteness', 'side', 'position', 'result', 'xpat15', and 'xpdiffat15'.
 
-For these columns, ‘gameid’ allowed us to differentiate different games, ‘datacompleteness’ allowed us to verify if the data was complete (and therefore usable), ‘position’ allowed us to get the position we wanted (top). The two xp columns allowed us to decide how well a top lane player was doing relative to their opponent and also allowed us to create our test statistic for the hypothesis test.
+These columns allowed us to differentiate between games, verify data completeness, specify the player position (top), and assess the performance of top laners relative to their opponents using experience points. These insights were crucial in generating our test statistic for hypothesis testing.
 
-Description of columns:
+Column Descriptions:
 
-`gameid`: The unique identifiers for the games that occurred. Used to differentiate each game.
-`datacompleteness`: Indicator of whether the data for this row is complete or missing certain information. Used to check if the row may be missing data in other relevant columns.
-`side`: Differentiates the players in the game as 'blue' or 'red' based on the side they were playing as.
-`position`: Describes which position the player played as.
-`result`: Describes whether the team of the player won in the end or not. True when the team won, False when the team lost.
-`xpat15`: The amount of xp the player had by the 15-minute mark in the game. Using the 15-minute mark because before 15 minutes, players usually stay in their own lane, which allows us to decide which top laner was better in the laning phase.
-`xpdiffat15`: The difference in xp between a player and their opponent in the same position. The sign of the value is positive if the player was in the lead. The sign is negative if the opponent was in the lead.
+`gameid`: Unique identifiers assigned to each game. Helps distinguish between different games.\
+'datacompleteness': Indicates whether the data in a row is complete or contains missing information. Used to assess data integrity.\
+'side': Identifies the players in the game as 'blue' or 'red' based on their respective sides.\
+'position': Specifies the position the player played during the game.\
+'result': Indicates whether the player's team won (True) or lost (False) the game.\
+'xpat15': Represents the amount of experience points (XP) accumulated by the player by the 15-minute mark in the game. This timeframe is chosen because players typically remain in their respective lanes during this period, allowing for a comparison of top laner performance during the laning phase.\
+'xpdiffat15': Denotes the difference in experience points between the player and their opponent in the same position by the 15-minute mark. The sign of the value indicates whether the player was ahead (positive) or behind (negative) their opponent.\
 
-
-In 2024, League of Legends remains a leading esports game. Players increasingly agree that, in competitive play, the top position has relatively less impact compared to mid, bot, jungle, and support roles. This is due to the top lane being considered solo, receiving less attention. Performance in the laning phase is often overlooked if competent in team fights. While top laners can carry games, it occurs less frequently than with other roles. This player perspective led us to investigate:
-
-**Does the performance of the top lane player during the laning phase affect the team's winning chances?** 
-(`<br>`)
 ## Data Cleaning and Exploratory Data Analysis
 ### Cleaning
 Initially, we needed to source our data. Oracle provided a csv file containing all competitive matches from 2022, which we downloaded and loaded into a pandas DataFrame.
 
 Next, we focused on shaping a DataFrame that could effectively isolate the necessary data for our analysis. We converted several non-boolean fields to boolean values, namely True or False, to simplify future data filtering. Specifically, we changed the datacompleteness and result columns to boolean formats. Moreover, we identified essential columns for our analysis: [`gameid`, `datacompleteness`, `side`, `position`, `result`, `xpat15`, `xpdiffat15`].
 
-Finally, we applied filters to hone in on fully complete data entries (datacompleteness == True) and entries specifically related to the top lane position (position == top). This step was crucial to streamline access to the relevant data later on.
+Finally, we applied filters to hone in on fully complete data entries (`datacompleteness` == `True`) and entries specifically related to the top lane position (`position == top`). This step was crucial to streamline access to the relevant data later on.
 **Here is the head of the cleaned dataframe**
 
 
@@ -45,8 +40,8 @@ Finally, we applied filters to hone in on fully complete data entries (datacompl
 | 36 | ESPORTSTMNT01_2690227 | True               | False      | Blue   | top        | Renekton   |     nan |     nan |     nan |     nan |     nan |         1972 | True     |       3 |        2 |         7 |          14 |            5 |             0 |             0 |             0 |            0 |            0 |          nan |             nan |                  nan |            nan |                nan |            18 | 0.5477 |             6 | 0.1826 |                   15 |            38 | 1.1562 |       14070 |         9771 |       12950 |    nan |   nan |        304 |           284 |             20 |                     nan |                       nan | 9.2495 |       3412 |     5065 |       96 |           3359 |         5053 |           92 |             53 |           12 |            4 |           0 |             0 |            0 |               0 |                 0 |                0 |       5856 |     7759 |      146 |           4952 |         7674 |          142 |            904 |           85 |            4 |           2 |             0 |            0 |               0 |                 0 |                0 |
 
 ### Univariate Analysis
-One of the most important stats regarding the performance of players in a game is 'kills', which reveals the 
-Below is the histogram representing the distribution of the 'xpat15' column and some relevant descriptive stats:
+One of the most important stats regarding the performance of players in a game is `kills`, which indicates how well a player is perfroming compared to their opponents.
+Below is the histogram representing the distribution of the `xpat15` column and some relevant descriptive stats:
 
 
 <iframe
@@ -56,7 +51,7 @@ Below is the histogram representing the distribution of the 'xpat15' column and 
   frameborder="0"
 ></iframe>
 
-Descriptive statistics for the 'kills' column:
+Descriptive statistics for the `kills` variable:
 
 * mean   : 2.796550743864304
   
@@ -73,7 +68,7 @@ Descriptive statistics for the 'kills' column:
 This graph shows that the distribution of  `kills` is rightly-skewed, which means it has a ‘tail’ to the right, indicating that large extreme values are more likely than large values. This is consistent with our expectation because it's easier to get a few kills in a game, rather than a lot. Only the top players who are highly skilled can get a higher kills rate. This observation on `kills` could be useful for our future analysis when we look into what factors could predict a team's performance.
 
 ### Bivariate Analysis
-Our research question is concerned with the stats of the top player that affect the chances of the team winning overall. So, we can now investigate the relationship between the team winning or not and the top player’s xp level.
+Our research question is concerned with the stats of the top player that affect the chances of the team winning overall. So, we can now investigate the relationship between the team winning or not and the top player’s amount of gold earned.
 
 Below is our bar chart comparing the difference of means for player’s gold earned between winning teams and losing teams as well as some relevant stats:
 <iframe
@@ -83,7 +78,7 @@ Below is our bar chart comparing the difference of means for player’s gold ear
   frameborder="0"
 ></iframe>
 
-Statistics for 'earnedgold' feature:
+Statistics for `earnedgold` feature:
 
 Absolute difference     : 2019.6618085416794
 
@@ -95,11 +90,11 @@ As we expected, the winning team has a higher amount of gold earned on average. 
 We can use groupby to find patterns and combine data for categories. We checked the `firstblood` and `firstbloodvictim` data columns. First blood is the first player kill in the game. Usually, in the top lane, getting first blood gives a big advantage, while being the first blood victim puts you at a disadvantage. So, we wanted to see how often top laners get first blood (and become first blood victims) and if it affects whether their team wins.
 
 Here's the pivot table we made by grouping the results:
+
 |   firstblood |   firstbloodvictim |   neither |
 |-------------:|-------------------:|----------:|
 |     0.100401 |          0.0432842 |  0.356395 |
 |     0.1558   |          0.0278404 |  0.316279 |
-
 Marginal sums for each column:
 
 **First Blood:** 0.160385
@@ -122,7 +117,7 @@ Consequently, we conducted an analysis on our primary DataFrame, df, to identify
 
 To further investigate, we selected variables we believed might exhibit a correlation with the presence or absence of 'opp_csat15' data. Initially, we determined our test parameters using our standard dataset. Specifically, we isolated rows where 'golddiffat15' was NaN and extracted the columns ['league', 'split', 'playoffs', 'patch', and 'position'].
 
-By using the groupby() method, we were able to test out our columns and see the missingness of certain leagues. Jumping to our test statistic, we noticed that the Missingness Distribution of ‘league’ compared to the others that we tested seemed a lot more lopsided.
+By using the groupby() method, we were able to test out our columns and see the missingness of certain leagues. Jumping to our test statistic, we noticed that the Missingness Distribution of `league` compared to the others that we tested seemed a lot more lopsided.
 
 <iframe
   src="assets/missing.html"
@@ -130,9 +125,9 @@ By using the groupby() method, we were able to test out our columns and see the 
   height="600"
   frameborder="0"
 ></iframe>
-Upon reviewing the graph, it's evident that there's a notable amount of missing data within leagues like LPL and LDL, which aligns with our earlier observations during dataset analysis. Particularly, the LDL league demonstrates a Missingness Proportion of 0.517867, indicating that over 50% of the instances of missing values in golddiffat15 are attributed to the LDL league.
+Upon reviewing the graph, it's evident that there's a notable amount of missing data within leagues like `LPL` and `LDL`, which aligns with our earlier observations during dataset analysis. Particularly, the `LDL` league demonstrates a Missingness Proportion of **0.517867**, indicating that over 50% of the instances of missing values in `golddiffat15` are attributed to the `LDL` league.
 
-Although this observation could be explained by the LDL league accounting for over 50% of all competitive games, we seek to comprehensively assess the dataset by conducting permutations on the columns under examination. This involves shuffling the league, split, playoffs, patch, and position columns.
+Although this observation could be explained by the LDL league accounting for over 50% of all competitive games, we seek to comprehensively assess the dataset by conducting permutations on the columns under examination. This involves shuffling the `league`, `split`, `playoff`s, `patch`, and `position` columns.
 
 Following this permutation process and regrouping by league, we randomized the leagues once again and reexamined the occurrence of null values to determine if any league could exceed a 50% rate of missingness.
 <iframe
@@ -141,7 +136,7 @@ Following this permutation process and regrouping by league, we randomized the l
   height="600"
   frameborder="0"
 ></iframe>
-As you can see, even our league with the largest share of missing values when permutated cannot even hit 0.1 of the total missingness on column golddiffat15. This implies that the missingness of this column is likely Missing at Random, dependent on the league column. To test this, let’s use a pair of hypotheses and a significance level of 0.01 with 1000 trial runs.
+As seen from the graph, the p-value our `league` with the largest share of missing values when permutated cannot even hit 0.1 of the total missingness on column `golddiffat15`. This implies that the missingness of this column is likely `Missing at Random` (MAR), dependent on the league column. To test this, let’s use a pair of hypotheses and a significance level of 0.05 with 1000 trial runs.
 
 **Null Hypothesis**: Data that is missing comes from the same league distribution as all other data.
 
@@ -151,9 +146,9 @@ We simulated this test 1000 times and returned a p-value of 0.0.
 
 Here, our p-value suggests that we can reject our null hypothesis, meaning that it is likely that data missing from golddiffat15 is significantly more likely to be in at least one league than others - this in turn means that golddiffat15 has data that is Missing At Random.
 
-Now, let’s find a column that golddiffat15 does not depend on. Intuitively, golddiffat15 shouldn’t depend on columns that are aggregated throughout our data extremely evenly; that is, columns that have no relation and are evenly spread out should not have any correlation with golddiffat15. One of these columns is position, which will always be even regardless of the matches, since all games will have 2 of each position.
+Now, let’s find a column that `golddiffat15` does not depend on. Intuitively, `golddiffat15` shouldn’t depend on columns that are aggregated throughout our data extremely evenly; that is, columns that have no relation and are evenly spread out should not have any correlation with golddiffat15. One of these columns is position, which will always be even regardless of the matches, since all games will have 2 of each position.
 
-Here, let’s test what the position missingness of golddiffat15 looks like when we groupby() on the position column.
+Here, let’s test what the position missingness of `golddiffat15` looks like when we groupby() on the position column.
 <iframe
   src="assets/position.html"
   width="800"
@@ -161,7 +156,7 @@ Here, let’s test what the position missingness of golddiffat15 looks like when
   frameborder="0"
 ></iframe>
 
-As you can see, this happened very often, because at the end of the day, the missingness of ‘golddiffat15’ never relied on ‘position’.
+The p-value is 0.0, which is less than our alpha 0.05. We reject the null hypothesis, As you can see, this happened very often, because at the end of the day, the missingness of `golddiffat15` never relied on `position`.
 ## Hypothesis Testing
 We revisited our initial inquiry posed at the onset of this project: whether teams with a winning top lane (defined here as the player with higher gold gained) would enjoy an increased likelihood of winning.
 
