@@ -115,19 +115,17 @@ By using the groupby() method, we were able to test out our columns and see the 
   height="600"
   frameborder="0"
 ></iframe>
+Upon reviewing the graph, it's evident that there's a notable amount of missing data within leagues like LPL and LDL, which aligns with our earlier observations during dataset analysis. Particularly, the LDL league demonstrates a Missingness Proportion of 0.517867, indicating that over 50% of the instances of missing values in golddiffat15 are attributed to the LDL league.
 
-Upon examining the graph, it appears that there is a significant level of missing data within leagues such as 'LPL' and 'LDL', consistent with our earlier observations during dataset analysis. Notably, the 'LDL' exhibits a Missingness Proportion of 0.517867, indicating that for all instances of missing values in 'opp_csat15', the 'LDL' league accounts for over 50% of those occurrences.
+Although this observation could be explained by the LDL league accounting for over 50% of all competitive games, we seek to comprehensively assess the dataset by conducting permutations on the columns under examination. This involves shuffling the league, split, playoffs, patch, and position columns.
 
-While this observation might be attributed to the 'LDL' league comprising over 50% of all competitive games, we aim to thoroughly assess the dataset by conducting permutations on the columns under scrutiny. This entails shuffling the 'league', 'split', 'playoffs', 'patch', and 'position' columns.
-
-Subsequently, after regrouping by 'league', we randomized the leagues once more and reevaluated the occurrence of null values to ascertain if any league could surpass a 50% rate of missingness, replacing any 'opp_csat15' values with 'golddiffat15'.
+Following this permutation process and regrouping by league, we randomized the leagues once again and reexamined the occurrence of null values to determine if any league could exceed a 50% rate of missingness.
 <iframe
   src="assets/pmissing.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
-
 As you can see, even our league with the largest share of missing values when permutated cannot even hit 0.1 of the total missingness on column golddiffat15. This implies that the missingness of this column is likely Missing at Random, dependent on the league column. To test this, let’s use a pair of hypotheses and a significance level of 0.01 with 1000 trial runs.
 
 **Null Hypothesis**: Data that is missing comes from the same league distribution as all other data.
@@ -149,10 +147,37 @@ Here, let’s test what the position missingness of golddiffat15 looks like when
 ></iframe>
 
 As you can see, this happened very often, because at the end of the day, the missingness of ‘golddiffat15’ never relied on ‘position’.
-
-
-
 ## Hypothesis Testing
+We revisited our initial inquiry posed at the onset of this project: whether teams with a winning top lane (defined here as the player with higher gold gained) would enjoy an increased likelihood of winning.
+
+**Null hypothesis**: Teams with a winning top lane **DO NOT** demonstrate a significantly higher probability of winning the game overall.
+
+**Alternative hypothesis**: Teams with a winning top lane exhibit a significantly elevated probability of winning the game overall.
+
+To explore this, we're introducing a new column into our dataset to indicate whether the top lane player held the lead at a specific juncture in the game. To determine this, we're examining the `golddiffat15` values, which reflect the gold difference between each team 15 minutes into the game. A positive value suggests that the top laner was ahead in gold compared to their opponent, denoted as True. Conversely, a negative value indicates the top laner was trailing, labeled as False. In cases where the value is zero, signifying both players had an equal amount of gold, we'll assign np.NaN, as such instances do not contribute to our analysis. This methodology enables us to comprehend the early game dynamics and their potential influence on the match's outcome.
+Below is what the DataFrame prepared for permutations test looks like:
+
+| result   | winninglane   |
+|:---------|:--------------|
+| False    | True          |
+| True     | False         |
+| False    | False         |
+| True     | True          |
+| True     | True          |
+
+Finally, we perform the permutation test at a significance level of 0.05 using 1000 simulations of the test statistic.
+
+Below is the histogram of the distribution of simulated test statistics:
+
+<iframe
+  src="assets/permutation_distribution_test_stat.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+The permutation test returns a p-value of 0.0. Under the null hypothesis, we rarely see differences in probability as large as the observed statistic (0.0 < 0.05).
+
+Thus, we can reject the null hypothesis and have sufficient evidence to support the alternate hypothesis: suggesting having a winning top lane, defined as the player with more gold, significantly increases the chance of the team winning overall.
 
 ## Framing a Prediction Problem
 
