@@ -14,12 +14,12 @@ These columns allowed us to differentiate between games, verify data completenes
 Column Descriptions:
 
 `gameid`: Unique identifiers assigned to each game. Helps distinguish between different games.\
-'datacompleteness': Indicates whether the data in a row is complete or contains missing information. Used to assess data integrity.\
-'side': Identifies the players in the game as 'blue' or 'red' based on their respective sides.\
-'position': Specifies the position the player played during the game.\
-'result': Indicates whether the player's team won (True) or lost (False) the game.\
-'xpat15': Represents the amount of experience points (XP) accumulated by the player by the 15-minute mark in the game. This timeframe is chosen because players typically remain in their respective lanes during this period, allowing for a comparison of top laner performance during the laning phase.\
-'xpdiffat15': Denotes the difference in experience points between the player and their opponent in the same position by the 15-minute mark. The sign of the value indicates whether the player was ahead (positive) or behind (negative) their opponent.\
+`datacompleteness`: Indicates whether the data in a row is complete or contains missing information. Used to assess data integrity.\
+`side`: Identifies the players in the game as 'blue' or 'red' based on their respective sides.\
+`position`: Specifies the position the player played during the game.\
+`result`: Indicates whether the player's team won (True) or lost (False) the game.\
+`xpat15`: Represents the amount of experience points (XP) accumulated by the player by the 15-minute mark in the game. This timeframe is chosen because players typically remain in their respective lanes during this period, allowing for a comparison of top laner performance during the laning phase.\
+`xpdiffat15`: Denotes the difference in experience points between the player and their opponent in the same position by the 15-minute mark. The sign of the value indicates whether the player was ahead (positive) or behind (negative) their opponent.\
 
 ## Data Cleaning and Exploratory Data Analysis
 ### Cleaning
