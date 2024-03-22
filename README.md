@@ -92,13 +92,28 @@ Proportional difference : 0.12071365886583755
 As we expected, the winning team has a higher amount of gold earned on average. However, we thought the proportional difference would have been more significant than 12%. This information will become very valuable later as it supports our prediction at the beginning that the amount of difference in gold earned between the winning and losing teams have a significant impact on the team's outcome.
 
 ### Interesting Aggregates
-(Will fill in later)
+We can use groupby to find patterns and combine data for categories. We checked the `firstblood` and `firstbloodvictim` data columns. First blood is the first player kill in the game. Usually, in the top lane, getting first blood gives a big advantage, while being the first blood victim puts you at a disadvantage. So, we wanted to see how often top laners get first blood (and become first blood victims) and if it affects whether their team wins.
+
+Here's the pivot table we made by grouping the results:
+|   firstblood |   firstbloodvictim |   neither |
+|-------------:|-------------------:|----------:|
+|     0.100401 |          0.0432842 |  0.356395 |
+|     0.1558   |          0.0278404 |  0.316279 |
+
+Marginal sums for each column:
+
+**First Blood:** 0.160385
+**First Blood Victim:** 0.117030
+**Neither:** 0.722584
+The table illustrates the proportion of top laners achieving first blood, becoming first blood victims, and neither, for both losing and winning teams.
+
+As anticipated, winning teams tend to have top laners securing first blood more often than being victims. Conversely, losing teams exhibit the opposite trend. Notably, examining the marginal sums of the columns reveals that top laners are more inclined to secure first blood rather than being victims, irrespective of their team's outcome. This suggests that top laners frequently secure first blood against non-top laners, which is an intriguing observation. Additionally, it's noteworthy that top laners are involved in first blood events (either as killers or victims) 27.7% of the time. Therefore, concerning first blood events, top laners demonstrate higher participation rates compared to other lanes on average.
 
 ## Assessment of Missingness
 ### NMAR Argument
 For data classified as NMAR (Not Missing at Random), the absence of data is inherently related to its own characteristics. If certain data is missing, it's likely due to intrinsic reasons tied to its value.
 
-In our analysis of the dataset, we found several columns with frequent missing values, such as 'dragons', 'opp_dragons', and their respective types ('infernals', 'mountains', 'clouds', 'oceans', and 'chemtechs'). We suspect these columns follow the NMAR pattern. When these entries are NaN, it implies the absence of dragons or a specific type of dragon in that game, indicating potential non-input rather than a zero value. Additionally, another factor potentially influencing missingness could be the total number of dragons in the game, which also contains numerous NaN values. Intuitively, as the dragon count increases in a game, the probability of encountering a wider variety of dragons also rises.
+In our analysis of the dataset, we found several columns with frequent missing values, such as 'dragons', 'opp_dragons', and their respective types (`infernals`, `mountains`, `clouds`, `oceans`, and `chemtechs`). We suspect these columns follow the NMAR pattern. When these entries are NaN, it implies the absence of dragons or a specific type of dragon in that game, indicating potential non-input rather than a zero value. Additionally, another factor potentially influencing missingness could be the total number of dragons in the game, which also contains numerous NaN values. Intuitively, as the dragon count increases in a game, the probability of encountering a wider variety of dragons also rises.
 
 ### Missingness Dependency
 In investigating missing data, our aim was to understand why certain entries were labeled complete while others were marked as partial. Upon examination, we observed a notable trend of partial data particularly within the entries from the 'LPL' league, representing China. This trend was especially evident in columns situated towards the end of the DataFrame, which were crucial for our analysis. We sought to determine if this pattern extended beyond mere coincidence, as our initial observations suggested a prevalence of incomplete data originating from Chinese leagues like 'LPL' and 'LDL'.
@@ -246,5 +261,7 @@ The mean number of kills per game is around 29. Thus, we define high number of k
 
 To split the data into high number of kills vs low number of kills, we need to group by individual games. Thus, we clean the original data again, this time retaining the `gameid` column\
 Using the same code from the Framing the Problem section, adding 'gameid' to the list of desired columns
+
+<iframe src="assets/fairness_analysis.html" width=800 height=600 frameBorder=0></iframe>
 
 **Conclusion:** According to the null hypothesis, it's uncommon to observe probability differences as significant as the observed statistic (0.0 < 0.05). Therefore, we can reject the null hypothesis and have enough evidence to support the alternative hypothesis, indicating that our model performs notably better for games with fewer total kills than those with higher total kills.
