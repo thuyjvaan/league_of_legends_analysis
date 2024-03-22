@@ -91,10 +91,12 @@ We can use groupby to find patterns and combine data for categories. We checked 
 
 Here's the pivot table we made by grouping the results:
 
+
 |   firstblood |   firstbloodvictim |   neither |
 |-------------:|-------------------:|----------:|
 |     0.100401 |          0.0432842 |  0.356395 |
 |     0.1558   |          0.0278404 |  0.316279 |
+
 Marginal sums for each column:
 
 **First Blood:** 0.160385
