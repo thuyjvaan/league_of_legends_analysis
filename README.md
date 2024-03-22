@@ -13,13 +13,13 @@ For these columns, ‘gameid’ allowed us to differentiate different games, ‘
 
 Description of columns:
 
-'gameid': The unique identifiers for the games that occurred. Used to differentiate each game.
-'datacompleteness': Indicator of whether the data for this row is complete or missing certain information. Used to check if the row may be missing data in other relevant columns.
-'side': Differentiates the players in the game as 'blue' or 'red' based on the side they were playing as.
-'position': Describes which position the player played as.
-'result: Describes whether the team of the player won in the end or not. True when the team won, False when the team lost.
-'xpat15: The amount of xp the player had by the 15-minute mark in the game. Using the 15-minute mark because before 15 minutes, players usually stay in their own lane, which allows us to decide which top laner was better in the laning phase.
-xpdiffat15: The difference in xp between a player and their opponent in the same position. The sign of the value is positive if the player was in the lead. The sign is negative if the opponent was in the lead.
+`gameid`: The unique identifiers for the games that occurred. Used to differentiate each game.
+`datacompleteness`: Indicator of whether the data for this row is complete or missing certain information. Used to check if the row may be missing data in other relevant columns.
+`side`: Differentiates the players in the game as 'blue' or 'red' based on the side they were playing as.
+`position`: Describes which position the player played as.
+`result`: Describes whether the team of the player won in the end or not. True when the team won, False when the team lost.
+`xpat15`: The amount of xp the player had by the 15-minute mark in the game. Using the 15-minute mark because before 15 minutes, players usually stay in their own lane, which allows us to decide which top laner was better in the laning phase.
+`xpdiffat15`: The difference in xp between a player and their opponent in the same position. The sign of the value is positive if the player was in the lead. The sign is negative if the opponent was in the lead.
 
 
 In 2024, League of Legends remains a leading esports game. Players increasingly agree that, in competitive play, the top position has relatively less impact compared to mid, bot, jungle, and support roles. This is due to the top lane being considered solo, receiving less attention. Performance in the laning phase is often overlooked if competent in team fights. While top laners can carry games, it occurs less frequently than with other roles. This player perspective led us to investigate:
@@ -34,6 +34,8 @@ Next, we focused on shaping a DataFrame that could effectively isolate the neces
 
 Finally, we applied filters to hone in on fully complete data entries (datacompleteness == True) and entries specifically related to the top lane position (position == top). This step was crucial to streamline access to the relevant data later on.
 **Here is the head of the cleaned dataframe**
+
+
 |    | gameid                | datacompleteness   | playoffs   | side   | position   | champion   |   pick1 |   pick2 |   pick3 |   pick4 |   pick5 |   gamelength | result   |   kills |   deaths |   assists |   teamkills |   teamdeaths |   doublekills |   triplekills |   quadrakills |   pentakills |   firstblood |   opp_towers |   firstmidtower |   firsttothreetowers |   turretplates |   opp_turretplates |   wardsplaced |    wpm |   wardskilled |   wcpm |   controlwardsbought |   visionscore |   vspm |   totalgold |   earnedgold |   goldspent |   gspd |   gpr |   total cs |   minionkills |   monsterkills |   monsterkillsownjungle |   monsterkillsenemyjungle |   cspm |   goldat10 |   xpat10 |   csat10 |   opp_goldat10 |   opp_xpat10 |   opp_csat10 |   golddiffat10 |   xpdiffat10 |   csdiffat10 |   killsat10 |   assistsat10 |   deathsat10 |   opp_killsat10 |   opp_assistsat10 |   opp_deathsat10 |   goldat15 |   xpat15 |   csat15 |   opp_goldat15 |   opp_xpat15 |   opp_csat15 |   golddiffat15 |   xpdiffat15 |   csdiffat15 |   killsat15 |   assistsat15 |   deathsat15 |   opp_killsat15 |   opp_assistsat15 |   opp_deathsat15 |
 |---:|:----------------------|:-------------------|:-----------|:-------|:-----------|:-----------|--------:|--------:|--------:|--------:|--------:|-------------:|:---------|--------:|---------:|----------:|------------:|-------------:|--------------:|--------------:|--------------:|-------------:|-------------:|-------------:|----------------:|---------------------:|---------------:|-------------------:|--------------:|-------:|--------------:|-------:|---------------------:|--------------:|-------:|------------:|-------------:|------------:|-------:|------:|-----------:|--------------:|---------------:|------------------------:|--------------------------:|-------:|-----------:|---------:|---------:|---------------:|-------------:|-------------:|---------------:|-------------:|-------------:|------------:|--------------:|-------------:|----------------:|------------------:|-----------------:|-----------:|---------:|---------:|---------------:|-------------:|-------------:|---------------:|-------------:|-------------:|------------:|--------------:|-------------:|----------------:|------------------:|-----------------:|
 |  0 | ESPORTSTMNT01_2690210 | True               | False      | Blue   | top        | Renekton   |     nan |     nan |     nan |     nan |     nan |         1713 | False    |       2 |        3 |         2 |           9 |           19 |             0 |             0 |             0 |            0 |            0 |          nan |             nan |                  nan |            nan |                nan |             8 | 0.2802 |             6 | 0.2102 |                    5 |            26 | 0.9107 |       10934 |         7164 |       10275 |    nan |   nan |        231 |           220 |             11 |                     nan |                       nan | 8.0911 |       3228 |     4909 |       89 |           3176 |         4953 |           81 |             52 |          -44 |            8 |           0 |             0 |            0 |               0 |                 0 |                0 |       5025 |     7560 |      135 |           4634 |         7215 |          121 |            391 |          345 |           14 |           0 |             1 |            0 |               0 |                 1 |                0 |
@@ -55,11 +57,17 @@ Below is the histogram representing the distribution of the 'xpat15' column and 
 ></iframe>
 
 Descriptive statistics for the 'kills' column:
+
 * mean   : 2.796550743864304
+  
 * median : 2.0
+  
 * mode   : [1]
+  
 * max    : 25
+  
 * min    : 0
+  
 * std    : 2.4190900419068813
 
 This graph shows that the distribution of  `kills` is rightly-skewed, which means it has a ‘tail’ to the right, indicating that large extreme values are more likely than large values. This is consistent with our expectation because it's easier to get a few kills in a game, rather than a lot. Only the top players who are highly skilled can get a higher kills rate. This observation on `kills` could be useful for our future analysis when we look into what factors could predict a team's performance.
@@ -76,7 +84,9 @@ Below is our bar chart comparing the difference of means for player’s gold ear
 ></iframe>
 
 Statistics for 'earnedgold' feature:
+
 Absolute difference     : 2019.6618085416794
+
 Proportional difference : 0.12071365886583755
 
 As we expected, the winning team has a higher amount of gold earned on average. However, we thought the proportional difference would have been more significant than 12%. This information will become very valuable later as it supports our prediction at the beginning that the amount of difference in gold earned between the winning and losing teams have a significant impact on the team's outcome.
@@ -121,6 +131,7 @@ Subsequently, after regrouping by 'league', we randomized the leagues once more 
 As you can see, even our league with the largest share of missing values when permutated cannot even hit 0.1 of the total missingness on column golddiffat15. This implies that the missingness of this column is likely Missing at Random, dependent on the league column. To test this, let’s use a pair of hypotheses and a significance level of 0.01 with 1000 trial runs.
 
 **Null Hypothesis**: Data that is missing comes from the same league distribution as all other data.
+
 **Alternative Hypothesis**: Data that is missing is significantly more likely to be one league than others.
 
 We simulated this test 1000 times and returned a p-value of 0.0.
