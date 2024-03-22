@@ -180,9 +180,53 @@ The permutation test returns a p-value of 0.0. Under the null hypothesis, we rar
 Thus, we can reject the null hypothesis and have sufficient evidence to support the alternate hypothesis: suggesting having a winning top lane, defined as the player with more gold, significantly increases the chance of the team winning overall.
 
 ## Framing a Prediction Problem
+The key issue that really gets to the heart of League of Legends is **predicting which team will win**?
+
+Every game has a clear outcome, either winning or losing, but understanding why is trickier than it seems. Many different elements influence each game, leading us to examine a dataset of competitive matches from 2022. This dataset broke down each game into 12 rows - 10 for the individual players (5 per team) and 2 summarizing team data. Essentially, every row corresponded to either a player or a team in a specific match, with columns providing various statistics for each participant, like Kills, Deaths, Assists, and other more intricate details that gain complexity throughout the game.
+
+Considering that winning a game is represented by a binary outcome, either True or False (equivalent to 1s and 0s), we identified our task as a binary classification problem. Our goal is to forecast the 'result' variable, which is pivotal for determining success in League of Legends, classifying it into True or False outcomes.
+
+We chose accuracy as our evaluation metric for the model because our primary objective is to assess the model's ability to correctly predict the winning or losing status of a team. We opted for accuracy over metrics like the F1-score, as the impact of false positives or false negatives didn't hold more weight than accurately identifying wins or losses. Given that each game results in a win or a loss, assigning equal importance to false positives and false negatives aligns with our rationale, justifying the use of accuracy for our predictions.
+
+Additionally, in terms of "time of prediction", our prediction phase was constrained to the dataset provided, without any external data or biases, ensuring that our analyses are based solely on the available information. This approach guarantees that our predictive insights are not influenced by data from past or future seasons, maintaining the dataset's integrity for isolated prediction purposes.
 
 ## Baseline Model
+For our initial model, we aimed to develop a predictive tool capable of determining wins solely based on key individual player statistics commonly available in League of Legends matches.
+
+**Quantitative Features**: Kills, Deaths, and Assists
+
+**Response Variable**: Result (Win (1) / Lose (0))
+
+Since these variables were already discrete, they could be easily integrated into a Pipeline and our model for training and prediction.
+
+Performance Baseline
+For our model selection, we opted for a DecisionTreeClassifier with a maximum depth of 4 for this straightforward prediction task. We reasoned that a simpler model would yield more straightforward results.
+
+Based on our analysis, we achieved an accuracy of approximately **~84%** for both training and testing data. The similarity in training and testing scores suggests that our model hasn't overfit the training data and can generalize well to unseen data. We view this as a promising baseline model, as it logically aligns with the notion that team success is often tied to individual player performance, particularly in aspects like Kills and Assists (which contribute to gold and time advantages), while also minimizing Deaths (as they grant the enemy team resources and opportunities). Overall, we are satisfied with the performance of this baseline model, considering its effectiveness despite limited training data.
 
 ## Final Model
+We decided to add `Towers`, `Double Kills`, `Dragons`, `Barons`, `Triple Kills`, `VSPM`, `Inhibitors`, `Earned GPM`, `Position`, `golddiffat15`, `SPM`, `Heralds`, `Teamname`, `xpdiffat15`, `DPM`, First Blood, and `Turret Plates` as new features.
+
+Here are the reasons why we believe the following variables are important to our analysis:
+**Position and Teamname:**
+As esports enthusiasts, we recognize that teams like T1 and DRX, finalists in Worlds, are likely to win matches due to their overall skill. Additionally, different positions prioritize varied objectives, such as supports focusing on assists and objectives, while tops prioritize kills due to their isolated early game role.
+
+**Objectives:**
+In League of Legends, objectives like **Dragons, Barons, and Towers** provide gold and buffs, aiding in teamfights and objective control. These boosts empower champions, enhancing their scaling and potential for victory in subsequent engagements.
+
+**Kills, Gold, and XP:**
+Features like First Blood and earned gold per minute (GPM) underscore the importance of both gold and kills in securing advantages. Gold enables item purchases and empowerment, while XP allows for level and ability progression, enhancing both individual and team strength.
+
+**Damage, CS, and Vision Score:**
+Damage output, minion kills (CS), and Vision Score are indicators of team performance. Damage correlates with winning, CS contributes to gold generation, and Vision Score aids in map awareness, facilitating strategic decision-making and objective control.
+
+### Hyperparameters
+**Model Description** 
+In the end, we opted to develop a model based on either the DecisionTreeClassifier or LogisticRegression. Initially, we manually tested various LogisticRegression and DecisionTreeClassifier models. The most accurate LogisticRegression model achieved around 91.5% accuracy, while the best DecisionTreeClassifier model reached approximately 90.5% accuracy. Based on this evaluation, we selected LogisticRegression as our final model. Employing GridSearchCV with cross-validation, we determined the optimal max_iter and penalty parameters to be 300 and 'l2' respectively. Upon training the model with the entire dataset, we achieved a final accuracy of approximately 91.5%. Overall, we were content with this level of accuracy, especially after incorporating what we considered to be effective features into our model. The optimization of hyperparameters and features enabled us to develop a model capable of predicting match outcomes with a high degree of accuracy.
+
+**Quantitative Variables**: Our discrete variables included `kills`, `deaths`, `assists`, `dragons`, `barons`, `heralds`, `firstblood`, `doublekills`, `triplekills`, `dpm`, `cspm`, `vspm`, `earned gpm`, `turretplates`, `towers`, and `inhibitors`. To account for fluctuations and differences in these variables, particularly in explaining player/team performance relative to others, we standardized `dpm`, `cspm`, `vspm`, `golddiffat15`, and `xpdiffat15`.
+
+**Qualitative Variables**: For our qualitative variables, namely position and teamname, we utilized the OneHotEncoder to convert them into quantitative columns, given their ordinal data types.
+
 
 ## Fairness Analysis
