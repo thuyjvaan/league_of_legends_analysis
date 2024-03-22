@@ -42,15 +42,12 @@ Finally, we applied filters to hone in on fully complete data entries (`datacomp
 ### Univariate Analysis
 One of the most important stats regarding the performance of players in a game is `kills`, which indicates how well a player is perfroming compared to their opponents.
 Below is the histogram representing the distribution of the `xpat15` column and some relevant descriptive stats:
-
-
 <iframe
   src="assets/kill_dist2.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
-
 Descriptive statistics for the `kills` variable:
 
 * mean   : 2.796550743864304
@@ -69,7 +66,6 @@ This graph shows that the distribution of  `kills` is rightly-skewed, which mean
 
 ### Bivariate Analysis
 Our research question is concerned with the stats of the top player that affect the chances of the team winning overall. So, we can now investigate the relationship between the team winning or not and the top player’s amount of gold earned.
-
 Below is our bar chart comparing the difference of means for player’s gold earned between winning teams and losing teams as well as some relevant stats:
 <iframe
   src="assets/bi_earngold"
@@ -77,7 +73,6 @@ Below is our bar chart comparing the difference of means for player’s gold ear
   height="600"
   frameborder="0"
 ></iframe>
-
 Statistics for `earnedgold` feature:
 
 Absolute difference     : 2019.6618085416794
@@ -156,7 +151,6 @@ Here, let’s test what the position missingness of `golddiffat15` looks like wh
   height="600"
   frameborder="0"
 ></iframe>
-
 The p-value is 0.0, which is less than our alpha 0.05. We reject the null hypothesis, As you can see, this happened very often, because at the end of the day, the missingness of `golddiffat15` never relied on `position`.
 ## Hypothesis Testing
 We revisited our initial inquiry posed at the onset of this project: whether teams with a winning top lane (defined here as the player with higher gold gained) would enjoy an increased likelihood of winning.
@@ -248,7 +242,7 @@ Question: Does the prediction outcome vary between games with a significant numb
 
 **Alternative Hypothesis:** The classifier's accuracy is greater for games with fewer kills.
 
-**Test statistic:** The difference in accuracy (fewer kills versus high number of kills).
+**Test statistic:** The difference in accuracy (fewer kills versus high number of kills). Since the mean of kills is 29, we split the data of higher than 29 to be high kills, and lower than 29 to be less kills. 
 
 **Significance Level:** 0.05
 
