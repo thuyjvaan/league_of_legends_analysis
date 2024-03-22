@@ -99,9 +99,9 @@ Here's the pivot table we made by grouping the results:
 
 Marginal sums for each column:
 
-**First Blood:** 0.160385
-**First Blood Victim:** 0.117030
-**Neither:** 0.722584
+**First Blood:** 0.160385\
+**First Blood Victim:** 0.117030\
+**Neither:** 0.722584\
 The table illustrates the proportion of top laners achieving first blood, becoming first blood victims, and neither, for both losing and winning teams.
 
 As anticipated, winning teams tend to have top laners securing first blood more often than being victims. Conversely, losing teams exhibit the opposite trend. Notably, examining the marginal sums of the columns reveals that top laners are more inclined to secure first blood rather than being victims, irrespective of their team's outcome. This suggests that top laners frequently secure first blood against non-top laners, which is an intriguing observation. Additionally, it's noteworthy that top laners are involved in first blood events (either as killers or victims) 27.7% of the time. Therefore, concerning first blood events, top laners demonstrate higher participation rates compared to other lanes on average.
@@ -113,14 +113,13 @@ For data classified as NMAR (Not Missing at Random), the absence of data is inhe
 In our analysis of the dataset, we found several columns with frequent missing values, such as 'dragons', 'opp_dragons', and their respective types (`infernals`, `mountains`, `clouds`, `oceans`, and `chemtechs`). We suspect these columns follow the NMAR pattern. When these entries are NaN, it implies the absence of dragons or a specific type of dragon in that game, indicating potential non-input rather than a zero value. Additionally, another factor potentially influencing missingness could be the total number of dragons in the game, which also contains numerous NaN values. Intuitively, as the dragon count increases in a game, the probability of encountering a wider variety of dragons also rises.
 
 ### Missingness Dependency
-In investigating missing data, our aim was to understand why certain entries were labeled complete while others were marked as partial. Upon examination, we observed a notable trend of partial data particularly within the entries from the 'LPL' league, representing China. This trend was especially evident in columns situated towards the end of the DataFrame, which were crucial for our analysis. We sought to determine if this pattern extended beyond mere coincidence, as our initial observations suggested a prevalence of incomplete data originating from Chinese leagues like 'LPL' and 'LDL'.
+In investigating missing data, our aim was to understand why certain entries were labeled complete while others were marked as partial. Upon examination, we observed a notable trend of partial data particularly within the entries from the `LPL` league (interesting fact found on Google, LPL and LDL representing games in China!). This trend was especially evident in columns situated towards the end of the DataFrame, which were crucial for our analysis. We sought to determine if this pattern extended beyond mere coincidence, as our initial observations suggested a prevalence of incomplete data originating from Chinese leagues like 'LPL' and `LDL`.
 
-Consequently, we conducted an analysis on our primary DataFrame, df, to identify columns consistently experiencing missing data. Notably, we discovered that 'opp_csat15', one of our key columns, exhibited frequent absence alongside other columns located towards the end of the DataFrame.
+Consequently, we conducted an analysis on our primary DataFrame, df, to identify columns consistently experiencing missing data. Notably, we discovered that `golddiffat15`, one of our key columns, exhibited frequent absence alongside other columns located towards the end of the DataFrame.
 
-To further investigate, we selected variables we believed might exhibit a correlation with the presence or absence of 'opp_csat15' data. Initially, we determined our test parameters using our standard dataset. Specifically, we isolated rows where 'golddiffat15' was NaN and extracted the columns ['league', 'split', 'playoffs', 'patch', and 'position'].
+To further investigate, we selected variables we believed might exhibit a correlation with the presence or absence of `golddiffat15` data. Initially, we determined our test parameters using our standard dataset. Specifically, we isolated rows where 'golddiffat15' was NaN and extracted the columns ['league', 'split', 'playoffs', 'patch', and 'position'].
 
 By using the groupby() method, we were able to test out our columns and see the missingness of certain leagues. Jumping to our test statistic, we noticed that the Missingness Distribution of `league` compared to the others that we tested seemed a lot more lopsided.
-
 <iframe
   src="assets/missing.html"
   width="800"
@@ -129,7 +128,7 @@ By using the groupby() method, we were able to test out our columns and see the 
 ></iframe>
 Upon reviewing the graph, it's evident that there's a notable amount of missing data within leagues like `LPL` and `LDL`, which aligns with our earlier observations during dataset analysis. Particularly, the `LDL` league demonstrates a Missingness Proportion of **0.517867**, indicating that over 50% of the instances of missing values in `golddiffat15` are attributed to the `LDL` league.
 
-Although this observation could be explained by the LDL league accounting for over 50% of all competitive games, we seek to comprehensively assess the dataset by conducting permutations on the columns under examination. This involves shuffling the `league`, `split`, `playoff`s, `patch`, and `position` columns.
+Although this observation could be explained by the `LDL` league accounting for over 50% of all competitive games, we seek to comprehensively assess the dataset by conducting permutations on the columns under examination. This involves shuffling the `league`, `split`, `playoff`s, `patch`, and `position` columns.
 
 Following this permutation process and regrouping by league, we randomized the leagues once again and reexamined the occurrence of null values to determine if any league could exceed a 50% rate of missingness.
 <iframe
